@@ -506,14 +506,4 @@ end
 --======================================================
 -- ÖRNEK KULLANIM
 --======================================================
-local Window = ImUI:CreateWindow({ Title = "debug window" })
-
-Window:AddSeparatorText("main")
-Window:AddButton({ Text = "Click Me", Callback = function() print("clicked") end })
-Window:AddCheckbox({ Text = "Enable ESP", Default = false, Callback = function(v) print("ESP:", v) end })
-Window:AddSlider({ Text = "Speed", Min = 16, Max = 200, Default = 16, Callback = function(v) print("Speed:", v) end })
-Window:AddCombo({ Text = "Mode", Options = { "Legit", "Rage", "Silent" }, Default = "Legit", Callback = function(v) print("Mode:", v) end })
-
-Window:AddSeparatorText("misc")
-Window:AddCheckbox({ Text = "Show FPS", Default = true, Callback = function(v) print("FPS:", v) end })
-Window:AddButton({ Text = "Reset", Callback = function() print("reset") end })
+return ImUI
