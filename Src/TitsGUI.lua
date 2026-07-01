@@ -335,10 +335,15 @@ function ImUI:AddCheckbox(config)
     return { Set = function(v) state = v; Check.Text = v and "✓" or "" end, Get = function() return state end }
 end
 
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
 function ImUI:Add3DView(config)
     config = config or {}
     local model = config.Model
-    local height = config.Height or 200
+    local height = config.Height or 250
+    local autoRotate = config.AutoRotate ~= false
+    local rotateSpeed = config.RotateSpeed or 35
 
     local Holder = Create("Frame", {
         Parent = self.Content,
@@ -347,19 +352,12 @@ function ImUI:Add3DView(config)
         BorderSizePixel = 0,
         LayoutOrder = self:_next()
     })
-    Create("UICorner", {
-        Parent = Holder,
-        CornerRadius = UDim.new(0, 4)
-    })
-    Create("UIStroke", {
-        Parent = Holder,
-        Color = Theme.Border,
-        Thickness = 1
-    })
+
+    Create("UICorner", {Parent = Holder, CornerRadius = UDim.new(0,4)})
 
     local Viewport = Create("ViewportFrame", {
         Parent = Holder,
-        Size = UDim2.new(1, 0, 1, 0),
+        Size = UDim2.new(1,0,1,0),
         BackgroundTransparency = 1
     })
 
@@ -367,25 +365,66 @@ function ImUI:Add3DView(config)
     cam.Parent = Viewport
     Viewport.CurrentCamera = cam
 
-    if model then
-        local clone = model:Clone()
-        clone.Parent = Viewport
-
-        local cf, size = clone:GetBoundingBox()
-        local center = cf.Position
-        local dist = math.max(size.X, size.Y, size.Z) * 2
-
-        cam.CFrame = CFrame.new(
-            center + Vector3.new(0, 0, dist),
-            center
-        )
-
-        game:GetService("RunService").RenderStepped:Connect(function(dt)
-            clone:PivotTo(
-                clone:GetPivot() * CFrame.Angles(0, math.rad(30 * dt), 0)
-            )
-        end)
+    if not model then
+        return Viewport
     end
+
+    local clone = model:Clone()
+    clone.Parent = Viewport
+
+    local cf, size = clone:GetBoundingBox()
+    local center = cf.Position
+    local dist = math.max(size.X,size.Y,size.Z) * 2.2
+
+    cam.CFrame = CFrame.new(center + Vector3.new(0,0,dist), center)
+
+    local rotX = 0
+    local rotY = 0
+    local dragging = false
+    local lastPos
+
+    local function applyRotation()
+        clone:PivotTo(
+            CFrame.new(center)
+            * CFrame.Angles(math.rad(rotY), math.rad(rotX), 0)
+        )
+    end
+
+    Viewport.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            lastPos = input.Position
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (
+            input.UserInputType == Enum.UserInputType.MouseMovement
+            or input.UserInputType == Enum.UserInputType.Touch
+        ) then
+            local delta = input.Position - lastPos
+            rotX += delta.X * 0.5
+            rotY -= delta.Y * 0.5
+            rotY = math.clamp(rotY, -80, 80)
+            lastPos = input.Position
+            applyRotation()
+        end
+    end)
+
+    RunService.RenderStepped:Connect(function(dt)
+        if autoRotate and not dragging then
+            rotX += rotateSpeed * dt
+            applyRotation()
+        end
+    end)
 
     return Viewport
 end
