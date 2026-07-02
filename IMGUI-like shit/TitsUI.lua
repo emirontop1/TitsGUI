@@ -1424,28 +1424,103 @@ function ImUI:AddTooltip(target, text)
     return Tip
 end
 
-
-function ImUI:AddConsole(config)
+  function ImUI:AddConsole(config)
     config = config or {}
 
-    local ConsoleWindow = ImUI:CreateWindow({
-        Title = config.Title or "Console",
-        Position = config.Position or UDim2.new(0.75, 0, 0.5, 0)
+    local ConsoleGui = Create("ScreenGui", {
+        Name = "ImUI_Console_" .. tostring(math.random(1,999999)),
+        Parent = PlayerGui,
+        ResetOnSpawn = false,
+        ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
     })
 
+    local width = 340
+    local height = 220
+
+    local Main = Create("Frame", {
+        Parent = ConsoleGui,
+        Size = UDim2.new(0, width, 0, height),
+        Position = UDim2.new(0.72, 0, 0.5, 0), -- main window'un sağı
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BackgroundColor3 = Theme.WindowBg,
+        BorderSizePixel = 0
+    })
+
+    Create("UIStroke", {
+        Parent = Main,
+        Color = Theme.Border,
+        Thickness = 1
+    })
+
+    local TitleBar = Create("Frame", {
+        Parent = Main,
+        Size = UDim2.new(1,0,0,24),
+        BackgroundColor3 = Theme.TitleBg,
+        BorderSizePixel = 0
+    })
+
+    Create("TextLabel", {
+        Parent = TitleBar,
+        Size = UDim2.new(1,0,1,0),
+        BackgroundTransparency = 1,
+        Text = config.Title or "Console",
+        TextColor3 = Theme.Text,
+        Font = Theme.Font,
+        TextSize = Theme.FontSize
+    })
+
+    -- IMPORTANT:
+    -- Local drag state => main window drag'inle çakışmaz
+    local dragging = false
+    local dragStart
+    local startPos
+
+    TitleBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = Main.Position
+        end
+    end)
+
+    TitleBar.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (
+            input.UserInputType == Enum.UserInputType.MouseMovement
+            or input.UserInputType == Enum.UserInputType.Touch
+        ) then
+            local delta = input.Position - dragStart
+            Main.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end)
+
+    -- FULL WINDOW CONSOLE
     local Holder = Create("ScrollingFrame", {
-        Parent = ConsoleWindow.Content,
-        Size = UDim2.new(1, -4, 1, -4),
+        Parent = Main,
+        Position = UDim2.new(0,0,0,24),
+        Size = UDim2.new(1,0,1,-24),
         BackgroundColor3 = Theme.FrameBg,
         BorderSizePixel = 0,
-        CanvasSize = UDim2.new(),
         AutomaticCanvasSize = Enum.AutomaticSize.Y,
+        CanvasSize = UDim2.new(),
         ScrollBarThickness = 4
     })
 
     Create("UIListLayout", {
         Parent = Holder,
-        Padding = UDim.new(0, 2)
+        Padding = UDim.new(0,2)
     })
 
     local console = {}
@@ -1453,14 +1528,13 @@ function ImUI:AddConsole(config)
     local function push(prefix, text, color)
         local label = Create("TextLabel", {
             Parent = Holder,
-            Size = UDim2.new(1, -6, 0, 18),
+            Size = UDim2.new(1,-4,0,18),
             BackgroundTransparency = 1,
             Text = prefix .. " " .. tostring(text),
             TextColor3 = color,
             Font = Theme.Font,
             TextSize = Theme.FontSize,
-            TextXAlignment = Enum.TextXAlignment.Left,
-            TextYAlignment = Enum.TextYAlignment.Center
+            TextXAlignment = Enum.TextXAlignment.Left
         })
 
         task.defer(function()
@@ -1471,15 +1545,15 @@ function ImUI:AddConsole(config)
     end
 
     function console:Log(text)
-        return push("[INFO]", text, Theme.Text)
+        push("[INFO]", text, Theme.Text)
     end
 
     function console:Warn(text)
-        return push("[WARN]", text, Color3.fromRGB(255, 220, 80))
+        push("[WARN]", text, Color3.fromRGB(255,220,80))
     end
 
     function console:Error(text)
-        return push("[ERROR]", text, Color3.fromRGB(255, 90, 90))
+        push("[ERROR]", text, Color3.fromRGB(255,90,90))
     end
 
     function console:Clear()
