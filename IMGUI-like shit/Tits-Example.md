@@ -21,21 +21,21 @@ ImGui / Iris / WindUI hissi verir.
 Installation
 
 Kodun raw linkini bir yere koy (örn. GitHub raw / Pastebin raw), sonra:
-
+```lua
 local TitsUI = loadstring(game:HttpGet("YOUR_RAW_LINK"))()
-
+```
 Örnek:
-
+```lua
 local TitsUI = loadstring(game:HttpGet("https://example.com/TitsUI.lua"))()
-
+```
 ---
 
 Create Window
-
+```lua
 local Window = TitsUI:CreateWindow({
     Title = "My GUI"
 })
-
+```
 Parameters
 
 Param| Type| Default| Açıklama
@@ -46,9 +46,9 @@ Title| string| ""Window""| Pencere başlığı
 Label
 
 Text gösterir.
-
+```lua
 Window:AddLabel("Hello")
-
+```
 ---
 
 Separator
