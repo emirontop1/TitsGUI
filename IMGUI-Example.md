@@ -1,6 +1,0 @@
-example:
-
-```lua
-helloworld("print")
-
-```
