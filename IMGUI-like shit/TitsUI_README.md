@@ -251,7 +251,14 @@ Window:Add3DView({
     RotateSpeed = 35
 })
 ```
-
+### Addconsole
+```lua
+local console = Window:AddConsole({
+    SeparateWindow = true,
+    Title = "Debug Console",
+    Height = 180
+})
+```
 Parameters:
 - Model: Model
 - Height: number
