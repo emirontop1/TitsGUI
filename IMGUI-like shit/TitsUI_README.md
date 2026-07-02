@@ -345,7 +345,7 @@ local progress = Window:AddProgressBar({
     Default = 0.25
 })
 
-progress:Set(0.75)
+--progress:Set(0.75)
 
 Window:AddColorPicker({
     Text = "Accent Color",
