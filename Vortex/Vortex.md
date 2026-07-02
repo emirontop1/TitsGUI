@@ -1,3 +1,4 @@
+```lua
 --// Say wallahi bismillah bro...
 local PremiumLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/emirontop1/P/refs/heads/main/Src/PremiumLib.lua"))()
 -- veya: local PremiumLib = require(path.to.PremiumLib)
@@ -130,4 +131,4 @@ AyarlarSub:CreateSlider("FOV", 60, 120, 90, function(v) print("FOV:", v) end)
 AyarlarSub:CreateDropdown("Tema", {"Koyu", "Açık"}, "Koyu", function(v) print(v) end)
 AyarlarSub:CreateColorPicker("Vurgu Rengi", Color3.fromRGB(255,255,255), function(c) print(c) end)
 
-
+```
