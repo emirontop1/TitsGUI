@@ -1424,30 +1424,23 @@ function ImUI:AddTooltip(target, text)
     return Tip
 end
 
+
 function ImUI:AddConsole(config)
     config = config or {}
 
-    local separate = config.SeparateWindow ~= false
-    local consoleContent
-
-    if separate then
-        local ConsoleWindow = ImUI:CreateWindow({
-            Title = config.Title or "Console"
-        })
-
-        consoleContent = ConsoleWindow.Content
-    else
-        consoleContent = self.Content
-    end
+    local ConsoleWindow = ImUI:CreateWindow({
+        Title = config.Title or "Console",
+        Position = config.Position or UDim2.new(0.75, 0, 0.5, 0)
+    })
 
     local Holder = Create("ScrollingFrame", {
-        Parent = consoleContent,
-        Size = UDim2.new(1, -4, 0, config.Height or 150),
+        Parent = ConsoleWindow.Content,
+        Size = UDim2.new(1, -4, 1, -4),
         BackgroundColor3 = Theme.FrameBg,
         BorderSizePixel = 0,
         CanvasSize = UDim2.new(),
         AutomaticCanvasSize = Enum.AutomaticSize.Y,
-        ScrollBarThickness = 3,
+        ScrollBarThickness = 4
     })
 
     Create("UIListLayout", {
@@ -1460,13 +1453,14 @@ function ImUI:AddConsole(config)
     local function push(prefix, text, color)
         local label = Create("TextLabel", {
             Parent = Holder,
-            Size = UDim2.new(1, -4, 0, 18),
+            Size = UDim2.new(1, -6, 0, 18),
             BackgroundTransparency = 1,
             Text = prefix .. " " .. tostring(text),
             TextColor3 = color,
             Font = Theme.Font,
-            TextSize = Theme.FontSize - 1,
+            TextSize = Theme.FontSize,
             TextXAlignment = Enum.TextXAlignment.Left,
+            TextYAlignment = Enum.TextYAlignment.Center
         })
 
         task.defer(function()
@@ -1481,7 +1475,7 @@ function ImUI:AddConsole(config)
     end
 
     function console:Warn(text)
-        return push("[WARN]", text, Color3.fromRGB(255, 200, 60))
+        return push("[WARN]", text, Color3.fromRGB(255, 220, 80))
     end
 
     function console:Error(text)
@@ -1498,6 +1492,7 @@ function ImUI:AddConsole(config)
 
     return console
 end
+
 --======================================================
 -- IMAGE (ImGui::Image)
 --======================================================
