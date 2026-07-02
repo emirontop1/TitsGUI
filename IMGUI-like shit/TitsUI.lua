@@ -3,7 +3,10 @@
     Tek dosya: library + örnek kullanım aynı script içinde.
     Mobile destekli, PC öncelikli (ImGui zaten dev-tool amaçlı, dense UI).
 --]]
-
+--[[
+  •Please fix the add console.
+  •Add better usage And dont waste Iris/IMGUI
+]]
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
