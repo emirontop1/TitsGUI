@@ -1454,7 +1454,7 @@ end
 --======================================================
 local RunExample = true
 
-if RunExample then
+if RunExample and _G.Example == true then
     local Window = ImUI:CreateWindow({ Title = "ImStyleUI Demo" })
 
     Window:AddSeparatorText("Temel Widgetlar")
@@ -1485,6 +1485,8 @@ if RunExample then
 
     local HelpBtn = Window:AddButton({ Text = "Yardım", Callback = function() end })
     Window:AddTooltip(HelpBtn, "Bu bir tooltip örneğidir")
+else
+    print("loaded Gui")
 end
 
 return ImUI
