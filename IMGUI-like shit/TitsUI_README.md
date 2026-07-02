@@ -9,6 +9,11 @@ Designed for exploit/executor environments with mobile and desktop support.
 local TitsUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/emirontop1/TitsGUI/refs/heads/main/IMGUI-like%20shit/TitsUI.lua"))()
 ```
 
+## Load Build-in Example
+```lua
+local TitsUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/emirontop1/TitsGUI/refs/heads/main/IMGUI-like%20shit/TitsUI.lua"))()
+_G.Example = true
+```
 ---
 
 ## Create Window
