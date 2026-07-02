@@ -1424,7 +1424,7 @@ function ImUI:AddTooltip(target, text)
     return Tip
 end
 
-  function ImUI:AddConsole(config)
+function ImUI:AddConsole(config)
     config = config or {}
 
     local ConsoleGui = Create("ScreenGui", {
@@ -1434,13 +1434,13 @@ end
         ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
     })
 
-    local width = 340
-    local height = 220
+    local width = 380
+    local height = 240
 
     local Main = Create("Frame", {
         Parent = ConsoleGui,
         Size = UDim2.new(0, width, 0, height),
-        Position = UDim2.new(0.72, 0, 0.5, 0), -- main window'un sağı
+        Position = UDim2.new(0.72, 0, 0.5, 0),
         AnchorPoint = Vector2.new(0.5, 0.5),
         BackgroundColor3 = Theme.WindowBg,
         BorderSizePixel = 0
@@ -1454,23 +1454,40 @@ end
 
     local TitleBar = Create("Frame", {
         Parent = Main,
-        Size = UDim2.new(1,0,0,24),
+        Size = UDim2.new(1,0,0,26),
         BackgroundColor3 = Theme.TitleBg,
         BorderSizePixel = 0
     })
 
     Create("TextLabel", {
         Parent = TitleBar,
-        Size = UDim2.new(1,0,1,0),
+        Position = UDim2.new(0,8,0,0),
+        Size = UDim2.new(1,-40,1,0),
         BackgroundTransparency = 1,
         Text = config.Title or "Console",
         TextColor3 = Theme.Text,
         Font = Theme.Font,
+        TextSize = Theme.FontSize,
+        TextXAlignment = Enum.TextXAlignment.Left
+    })
+
+    local Close = Create("TextButton", {
+        Parent = TitleBar,
+        AnchorPoint = Vector2.new(1,0),
+        Position = UDim2.new(1,-4,0,3),
+        Size = UDim2.new(0,20,0,20),
+        BackgroundColor3 = Color3.fromRGB(170, 60, 60),
+        BorderSizePixel = 0,
+        Text = "X",
+        TextColor3 = Color3.new(1,1,1),
+        Font = Theme.Font,
         TextSize = Theme.FontSize
     })
 
-    -- IMPORTANT:
-    -- Local drag state => main window drag'inle çakışmaz
+    Close.MouseButton1Click:Connect(function()
+        ConsoleGui:Destroy()
+    end)
+
     local dragging = false
     local dragStart
     local startPos
@@ -1506,11 +1523,10 @@ end
         end
     end)
 
-    -- FULL WINDOW CONSOLE
     local Holder = Create("ScrollingFrame", {
         Parent = Main,
-        Position = UDim2.new(0,0,0,24),
-        Size = UDim2.new(1,0,1,-24),
+        Position = UDim2.new(0,0,0,26),
+        Size = UDim2.new(1,0,1,-26),
         BackgroundColor3 = Theme.FrameBg,
         BorderSizePixel = 0,
         AutomaticCanvasSize = Enum.AutomaticSize.Y,
@@ -1525,23 +1541,25 @@ end
 
     local console = {}
 
+    local function getTime()
+        return os.date("%H:%M:%S")
+    end
+
     local function push(prefix, text, color)
-        local label = Create("TextLabel", {
+        Create("TextLabel", {
             Parent = Holder,
-            Size = UDim2.new(1,-4,0,18),
+            Size = UDim2.new(1,-6,0,18),
             BackgroundTransparency = 1,
-            Text = prefix .. " " .. tostring(text),
+            Text = "[" .. getTime() .. "] " .. prefix .. " " .. tostring(text),
             TextColor3 = color,
             Font = Theme.Font,
-            TextSize = Theme.FontSize,
+            TextSize = Theme.FontSize - 1,
             TextXAlignment = Enum.TextXAlignment.Left
         })
 
         task.defer(function()
             Holder.CanvasPosition = Vector2.new(0, 999999)
         end)
-
-        return label
     end
 
     function console:Log(text)
@@ -1566,7 +1584,6 @@ end
 
     return console
 end
-
 --======================================================
 -- IMAGE (ImGui::Image)
 --======================================================
