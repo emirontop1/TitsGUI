@@ -5,7 +5,7 @@
 
  ```lua
 
-local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/emirontop1/TitsGUI/refs/heads/main/OrionRemastered/source.lua'))()
+local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/emirontop1/TitsGUI/refs/heads/main/OrionRemastered/Source.lua'))()
 
 local Window = OrionLib:MakeWindow({
     Name = "ORIONRecontinued",
