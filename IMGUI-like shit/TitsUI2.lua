@@ -1,3 +1,15 @@
+
+--[[
+
+I GIVE UP THIS IS HARD
+
+
+
+
+
+
+]]
+
 --[[
     ImStyleUI - ImGui / Iris / WindUI Inspired Compact GUI Library
     Tek dosya: library + örnek kullanım aynı script içinde.
