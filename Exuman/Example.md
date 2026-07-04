@@ -1,8 +1,7 @@
 
 
 ```lua
-_G.Version = "V3" -- Değişken adı 'Version' olarak kaldı
-local EmoC = loadstring(game:HttpGet('https://raw.githubusercontent.com/emirontop1/GuiLibs/refs/heads/main/src/' .. _G.Version .. '.lua'))()
+local EmoC = loadstring(game:HttpGet('https://raw.githubusercontent.com/emirontop1/GuiLibs/refs/heads/main/src/source.lua'))()
 
 local Config = {
     icon = "shield-check", 
